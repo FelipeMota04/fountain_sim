@@ -142,7 +142,7 @@ if __name__ == "__main__":
     
     # Parâmetros padrão para a exportação
     T0_init = 16.0
-    T_init = 0.8
+    T_init = 0.1
     t_init = 1.0e-2
     B_fixed = 3.0e-9
 

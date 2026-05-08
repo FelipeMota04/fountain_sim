@@ -108,7 +108,7 @@ def apply_shaped_pulse(state, Omega_amp, delta_flat, t_local, profile_type='sine
 
 def simulate_ramsey_fringe(Temp_0, T, t, B=3e-9,theta1=np.pi/2,
                            theta2 = np.pi/2, N_r=50, N_v=30,
-                           profile1='square', profile2='square'):
+                           profile1='sine', profile2='sine'):
     """
     Simulação das franjas de Ramsey iterando sobre efeitos térmicos e espaciais.
     """
@@ -220,14 +220,14 @@ if __name__ == "__main__":
     
     # Parâmetros padrão para a exportação
     T0_init = 16.0
-    T_init = 0.8
+    T_init = 0.1
     t_init = 1.0e-2
     B_fixed = 3.0e-9
 
-    tvec, P2 = simulate_ramsey_fringe(T0_init * 1e-6, T_init, t_init, B_fixed)
+    tvec, P2 = simulate_ramsey_fringe(T0_init * 1e-6, T_init, t_init, B_fixed,profile1='sine', profile2='sine')
     
     # Geração do arquivo estruturado com cabeçalho
-    arquivo_csv = 'simulation_data.csv'
+    arquivo_csv = 'simulation_data_alt.csv'
     np.savetxt(arquivo_csv, np.column_stack((tvec, P2)), delimiter=',', 
                header='Detuning_Normalizado,Probabilidade_P2', comments='')
     
