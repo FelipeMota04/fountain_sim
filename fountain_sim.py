@@ -44,7 +44,8 @@ def apply_bloch_rotation(state, Omega_vec, t):
     
     return np.array([new_x, new_y, new_z])
 
-def simulate_ramsey_fringe(Temp_0, T, t, B=3e-9, N_r=50, N_v=30):
+def simulate_ramsey_fringe(Temp_0, T, t, B=3e-9,theta1=np.pi/2,
+                           theta2 = np.pi/2, N_r=50, N_v=30):
     """
     Simulação das franjas de Ramsey iterando sobre efeitos térmicos e espaciais.
     """
@@ -58,8 +59,9 @@ def simulate_ramsey_fringe(Temp_0, T, t, B=3e-9, N_r=50, N_v=30):
     # Cinemática: velocidade necessária para atingir o tempo de voo T
     v_launch = 0.5 * g * (T + 2 * t)
     
-    # Frequência de Rabi para um pulso pi/2 no centro da cavidade
-    Omega_mw_0 = np.pi / (2 * t) 
+    # Frequência de Rabi para um pulso determinado no centro das duas cavidades
+    Omega_mw_1 = theta1 / t
+    Omega_mw_2 = theta2 / t
     
     # Efeito Zeeman de 2ª ordem para o campo B fixado
     w_zeeman = 2 * np.pi * (42.74e9 * B**2)
@@ -98,9 +100,10 @@ def simulate_ramsey_fringe(Temp_0, T, t, B=3e-9, N_r=50, N_v=30):
     W_R, W_V = np.meshgrid(weights_r, weights_v)
     Weights_flat = (W_R * W_V).flatten()
 
-    # Perfil espacial do campo magnético do micro-ondas na cavidade (Bessel J0)
-    Omega_local_flat = Omega_mw_0 * j0(chi_01 * R_flat / Rc)
-    
+    # Perfil espacial do campo magnético de micro-ondas nas cavidades (Bessel J0)
+    Omega_local_flat_1 = Omega_mw_1 * j0(chi_01 * R_flat / Rc)
+    Omega_local_flat_2 = Omega_mw_2 * j0(chi_01 * R_flat / Rc)
+
     # Correção dos tempos de interação devido à dispersão térmica de velocidades
     t_local_flat = t * (1 - V_flat / v_launch)
     T_local_flat = T * (1 + V_flat / v_launch)
@@ -116,15 +119,16 @@ def simulate_ramsey_fringe(Temp_0, T, t, B=3e-9, N_r=50, N_v=30):
         delta_flat = np.full(N_total, delta)
         
         # 1º Pulso: Subida pela cavidade
-        Omega_vec_pulse = np.array([Omega_local_flat, np.zeros(N_total), delta_flat])
-        state_mid = apply_bloch_rotation(state_0_base, Omega_vec_pulse, t_local_flat)
+        Omega_vec_pulse_1 = np.array([Omega_local_flat_1, np.zeros(N_total), delta_flat])
+        state_mid = apply_bloch_rotation(state_0_base, Omega_vec_pulse_1, t_local_flat)
         
         # Voo livre: Evolução de fase na região sem micro-ondas (apenas delta atua)
         Omega_vec_free = np.array([np.zeros(N_total), np.zeros(N_total), delta_flat])
         state_evolved = apply_bloch_rotation(state_mid, Omega_vec_free, T_local_flat)
         
         # 2º Pulso: Descida pela cavidade
-        state_final = apply_bloch_rotation(state_evolved, Omega_vec_pulse, t_local_flat)
+        Omega_vec_pulse_2 = np.array([Omega_local_flat_2, np.zeros(N_total), delta_flat])
+        state_final = apply_bloch_rotation(state_evolved, Omega_vec_pulse_2, t_local_flat)
         
         # Probabilidade P2 de estado excitado ponderada pela distribuição de Maxwell-Boltzmann
         P2_local = 0.5 * (1 - state_final[2, :])
