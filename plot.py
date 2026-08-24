@@ -2,8 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Carrega os dados dos dois arquivos CSV
-df1 = pd.read_csv('simulation_data.csv')
-df2 = pd.read_csv('simulation_data_alt.csv')
+df1 = pd.read_csv('data/simulation_data.csv')
+df2 = pd.read_csv('data/simulation_data_alt.csv')
 
 # Criação da figura
 plt.figure(figsize=(10, 6))

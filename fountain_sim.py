@@ -141,15 +141,15 @@ if __name__ == "__main__":
     print("Executando simulação para geração de CSV...")
     
     # Parâmetros padrão para a exportação
-    T0_init = 16.0
-    T_init = 0.1
-    t_init = 1.0e-2
+    T0_init = 1.0
+    T_init = 0.22
+    t_init = 1.7e-2
     B_fixed = 3.0e-9
 
     tvec, P2 = simulate_ramsey_fringe(T0_init * 1e-6, T_init, t_init, B_fixed)
     
     # Geração do arquivo estruturado com cabeçalho
-    arquivo_csv = 'simulation_data.csv'
+    arquivo_csv = 'data/simulation_data.csv'
     np.savetxt(arquivo_csv, np.column_stack((tvec, P2)), delimiter=',', 
                header='Detuning_Normalizado,Probabilidade_P2', comments='')
     
