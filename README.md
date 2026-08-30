@@ -24,8 +24,7 @@ fountain_sim/
 ├── fountain_sim_alt.py           # simulação vetorizada (pulso seno/Blackman)
 ├── fountain_sim_performance.py   # simulação OTIMIZADA (quadraturas + 7 perfis de pulso)
 ├── fit_data.py                   # ajuste aos dados experimentais (resposta instrumental)
-├── gui.py                        # interface gráfica com sliders
-├── plot.py                       # plotagem das curvas simuladas
+├── gui.py                        # interface gráfica desktop interativa (matplotlib)
 ├── data/
 │   ├── exp_data.csv              # dados experimentais (frequência × sinal)
 │   ├── simulation_data.csv       # saída da simulação original
@@ -34,23 +33,14 @@ fountain_sim/
 ├── notebooks/
 │   └── perfil_cavidade.ipynb     # análise do perfil da cavidade
 ├── images/                       # figuras geradas e imagens de referência
-├── relatorio/                    # relatório técnico (LaTeX + PDF + figuras)
 ├── requirements.txt
 └── LICENSE
 ```
 
 ## Instalação
 
-As dependências são `numpy`, `scipy`, `pandas` e `matplotlib`. Com `conda`:
+As dependências são `numpy`, `scipy`, `pandas`, `matplotlib`, `streamlit` e `plotly`. Com `pip`:
 
-```bash
-conda create -n fountain_sim python=3.12 numpy scipy pandas matplotlib
-conda activate fountain_sim
-```
-
-Ou com `pip`:
-
-```bash
 pip install -r requirements.txt
 ```
 
@@ -80,21 +70,17 @@ O `fit_data.py`:
    (`square`, `sine`, `cos2`, `triangle`, `gaussian`, `blackman`, `gravity_sine`)
    e seleciona o melhor por `R²`/RMSE/AIC.
 
-### Interface gráfica
+### Interface gráfica Desktop (Matplotlib)
 
 ```bash
 python gui.py
 ```
 
-### Relatório
-
-O relatório técnico completo (LaTeX) está em `relatorio/`; para recompilar:
+### Dashboard Web Interativo (Streamlit)
 
 ```bash
-cd relatorio && latexmk -pdf relatorio.tex
+streamlit run app.py
 ```
-
-## Resultados principais
 
 A modelagem da resposta instrumental elevou a qualidade do ajuste de
 **R² ≈ 0,80 → 0,98** (RMSE ≈ 0,005 no sinal bruto), assentando corretamente os vales de

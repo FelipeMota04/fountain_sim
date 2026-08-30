@@ -41,6 +41,11 @@ PULSE_PROFILES = ["square", "sine", "cos2", "triangle", "gaussian",
 # Largura do perfil gaussiano (fixa, não ajustada).
 GAUSSIAN_SIGMA = 0.2
 
+# Geometria experimental (MOT e aberturas da cavidade)
+H_MOT_FIXED = 0.0         # distância MOT -> cavidade (m). Ex.: 0.35 para chafariz com MOT inferior
+SIGMA_R0_FIXED = 0.0      # raio inicial da nuvem (m). Ex.: 1.5e-3 (1.5 mm)
+R_APERTURE_FIXED = None   # raio da abertura da cavidade (m). Ex.: 0.010 (10 mm) ou None (Rc=21.5 mm)
+
 # Fixa a área do pulso em θ = π/2 (físico para Ramsey).
 FIX_THETA_PI2 = True
 
@@ -134,6 +139,8 @@ def run_simulation(temp_uK, T, tau, theta1, theta2, tvec, n_r, n_v, n_steps, pro
         N_r=n_r, N_v=n_v, N_steps=n_steps,
         profile1=profile, profile2=profile,
         tvec=tvec, sigma=GAUSSIAN_SIGMA,
+        h_mot=H_MOT_FIXED, sigma_r0=SIGMA_R0_FIXED,
+        R_aperture=R_APERTURE_FIXED
     )
 
 
@@ -250,7 +257,7 @@ def evaluate(p, detuning_hz, y_raw, profile):
 
 
 # =============================================================================
-# 4. RELATÓRIO
+# 4. RESULTADOS
 # =============================================================================
 def report_profile(profile, p, err, A, C, r2, rmse, aic, detuning_hz, y_raw):
     temp_uK, T, tau, theta1, theta2 = unpack_params(p)
